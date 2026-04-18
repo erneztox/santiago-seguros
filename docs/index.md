@@ -6,62 +6,77 @@
 
 ---
 
-## 1. Requerimientos de Hardware y Software para la Creación del Instalador (Estación de Trabajo del Desarrollador)
+## 1. Requerimientos de Hardware y Software
+
 Antes de iniciar el proceso de creación del instalador, la máquina utilizada para el desarrollo debe cumplir con los siguientes prerrequisitos:
-- **Sistema Operativo:** Windows 10 o superior (64 bits).
-- **Software Base:**
-    - Python 3.8 o superior instalado y configurado en el PATH del sistema.
-    - MySQL Server (puede ser la versión Community) o XAMPP/WAMP para pruebas locales.
-    - Biblioteca `mysql-connector-python` instalada via pip.
-    - Inno Setup Compiler (versión 5.4 o superior). Es indispensable marcar la opción de instalar el "Inno Setup Preprocessor" durante su instalación, ya que permite usar scripts más avanzados.
-- **Estructura de Archivos (Fuente):** Se debe tener una carpeta raíz del proyecto (ej. `C:\SantiagoSeguros\Dist`) que contenga:
-    - El script principal de Python (ej. `main.py`).
-    - Los módulos y paquetes del sistema.
-    - El script SQL de inicialización de la base de datos (`init_database.sql`).
-    - El archivo `.ico` para el ícono de la aplicación.
-    - (Opcional) El ejecutable de MySQL si se opta por la instalación embebida.
 
-## 2. Pasos Necesarios para la Configuración, Compilación e Instalación del Instalador (Procedimiento en Inno Setup)
+### 💻 Sistema Operativo
+- **Windows 10** o superior (64 bits).
 
-### Paso 1: Preparación de la Aplicación Python (Creación del Ejecutable Base)
-Para asegurar la portabilidad y evitar dependencias externas en el equipo del cliente, se recomienda compilar la aplicación Python en un archivo `.exe` antes de crear el instalador final.
-1. Abrir la terminal (CMD) en la carpeta del proyecto.
-2. Ejecutar el comando: `pip install pyinstaller`.
-3. Ejecutar el comando de empaquetado:
-    ```cmd
-    pyinstaller --onefile --windowed --icon=logo.ico --name "SantiagoSeguros" main.py
-    ```
-    *Este comando generará una carpeta `dist` que contiene el archivo `SantiagoSeguros.exe`*.
+### ⚙️ Software Base
+- **Python 3.8 o superior** instalado y configurado en el PATH del sistema.
+- **MySQL Server** (versión Community) o XAMPP/WAMP para pruebas locales.
+- **Biblioteca Python:** `mysql-connector-python` instalada vía pip.
+- **Inno Setup Compiler** (versión 5.4 o superior).
 
-### Paso 2: Configuración Inicial del Script de Inno Setup
-1. Abrir el programa **Inno Setup Compiler**.
-2. En el menú, seleccionar `File` -> `New`. Esto abrirá el "Application Wizard" (Asistente).
-3. Hacer clic en "Next". Rellenar la información básica:
+!!! warning "Importante: Inno Setup Preprocessor"
+    Es indispensable marcar la opción de instalar el **"Inno Setup Preprocessor"** durante la instalación de Inno Setup. Esto permite utilizar scripts avanzados necesarios para automatizar tareas complejas.
+
+### 📁 Estructura de Archivos (Fuente)
+Se debe contar con una carpeta raíz del proyecto (ej. `C:\SantiagoSeguros\Dist`) estructurada de la siguiente manera:
+
+- `main.py` (Script principal de Python).
+- Módulos y paquetes dependientes del sistema.
+- `init_database.sql` (Script SQL para inicializar la base de datos).
+- `logo.ico` (Archivo de ícono de la aplicación).
+- *(Opcional)* El ejecutable instalador de MySQL si se opta por una instalación embebida.
+
+---
+
+## 2. Configuración y Compilación (Procedimiento en Inno Setup)
+
+### Paso 1: Preparación del Ejecutable Base (Python)
+Para asegurar la portabilidad y evitar dependencias en el equipo del cliente, compilaremos la aplicación Python en un archivo `.exe`.
+
+1. Abre la terminal (CMD) en la carpeta del proyecto.
+2. Instala la herramienta de empaquetado ejecutando:
+   ```cmd
+   pip install pyinstaller
+   ```
+3. Ejecuta el comando de empaquetado:
+   ```cmd
+   pyinstaller --onefile --windowed --icon=logo.ico --name "SantiagoSeguros" main.py
+   ```
+   > **Nota:** Este comando generará una carpeta `dist` que contendrá tu nuevo archivo `SantiagoSeguros.exe`.
+
+### Paso 2: Configuración del Script de Inno Setup
+1. Abre el programa **Inno Setup Compiler**.
+2. En el menú, selecciona `File` -> `New` para abrir el asistente (Application Wizard).
+3. Haz clic en **Next** y rellena la información básica:
     - **Application name:** Santiago Seguros Analytics.
     - **Application version:** 1.0.
     - **Application publisher:** Santiago Seguros.
-    - **Application website:** (Opcional, ej. `www.santiagoseguros.cl`).
-4. Hacer clic en "Next". En la pantalla "Application Destination", aceptar la carpeta por defecto (`Program Files\Santiago Seguros Analytics`).
+4. En **Application Destination**, acepta la ruta por defecto (`Program Files\Santiago Seguros Analytics`).
 
-### Paso 3: Configuración de Archivos a Empaquetar
-1. En el paso "Application Files", hacer clic en "Add file(s)..." y seleccionar el `SantiagoSeguros.exe` generado en el Paso 1.
-2. Volver a hacer clic en "Add file(s)..." y agregar el script `init_database.sql`.
-3. Si se incluye MySQL embebido, hacer clic en "Add folder..." y seleccionar la carpeta que contiene los binarios de MySQL.
-4. En la ventana de propiedades del archivo `SantiagoSeguros.exe`, marcar la casilla "This is the main executable file".
+### Paso 3: Selección de Archivos
+1. En **Application Files**, haz clic en `Add file(s)...` y selecciona el `SantiagoSeguros.exe` generado en el paso anterior.
+2. Marca la casilla **"This is the main executable file"** en sus propiedades.
+3. Vuelve a hacer clic en `Add file(s)...` y agrega `init_database.sql`.
+4. *(Si aplica)* Usa `Add folder...` para incluir los binarios de MySQL.
 
-### Paso 4: Configuración de Accesos Directos y Registro (Íconos)
-1. En el paso "Application Icons", hacer clic en "Add entry...".
-2. Para la ubicación del acceso directo, seleccionar "Program Menu folder" y "Desktop folder".
-3. En "Name", escribir "Santiago Seguros Analytics".
-4. En "Filename", hacer clic en el botón "Browse..." y seleccionar `SantiagoSeguros.exe`.
-5. En "Icon filename", seleccionar el archivo `.ico` del proyecto.
+### Paso 4: Accesos Directos
+1. En **Application Icons**, haz clic en `Add entry...`.
+2. Ubicación: Selecciona `Program Menu folder` y `Desktop folder`.
+3. Nombre: `Santiago Seguros Analytics`.
+4. Archivo: Selecciona `SantiagoSeguros.exe`.
+5. Ícono: Selecciona el archivo `.ico` de tu proyecto.
 
-### Paso 5: Configuración del Lenguaje y Modo de Instalación
-1. En el paso "Setup Languages", seleccionar "English" y "Spanish". Inno Setup soporta instalaciones multilingüe, lo cual es útil para entornos corporativos.
-2. En el paso "Compiler Settings", definir el nombre del archivo de salida (ej. `SantiagoSeguros_Setup.exe`) y la carpeta donde se guardará.
+### Paso 5: Opciones Finales
+1. En **Setup Languages**, selecciona **Spanish** (y English si se desea).
+2. En **Compiler Settings**, define el nombre de salida del instalador (ej. `SantiagoSeguros_Setup.exe`).
 
-### Paso 6: Inclusión de las Pruebas y Procedimiento de Marcha Atrás (Código Pascal Script)
-Este es el paso más crítico para cumplir con el instructivo formal. Se debe hacer clic en "Next" hasta llegar a "Finish" y luego marcar la opción "Yes" para editar el script `.iss` generado. Se debe agregar el siguiente código en la sección `[Code]` para automatizar la verificación de requisitos e instalación de MySQL.
+### Paso 6: Script de Automatización (Pascal Script)
+Este es el paso más crítico. Haz clic en "Finish", selecciona "Yes" para editar el script generado y agrega el siguiente código al final del archivo en la sección `[Code]`.
 
 ```pascal
 [Code]
@@ -111,19 +126,25 @@ begin
 end;
 ```
 
-### Paso 7: Compilación del Instalador Final
-1. Guardar el script con la extensión `.iss` (ej. `installer_santiago.iss`).
-2. En el menú de Inno Setup, hacer clic en `Compile` -> `Compile` (o presionar `F9`).
-3. Verificar que no aparezcan errores en la consola de salida. Si la compilación es exitosa, se generará el archivo `SantiagoSeguros_Setup.exe` en la carpeta de salida definida.
+### Paso 7: Compilación Final
+1. Guarda tu trabajo con la extensión `.iss` (ej. `installer.iss`).
+2. Haz clic en `Compile` -> `Compile` (o presiona **F9**).
+3. Si todo está correcto, se generará el archivo `SantiagoSeguros_Setup.exe` listo para usar.
 
-## 3. Pruebas para Asegurar la Instalación Correcta
-Una vez generado el instalador (`SantiagoSeguros_Setup.exe`), se deben ejecutar las siguientes pruebas en un equipo limpio (sin Python ni MySQL):
-- **Prueba de Integridad:** Ejecutar el `setup.exe` y verificar que se descompriman todos los archivos en la carpeta `Program Files`.
-- **Prueba de Funcionalidad:** Abrir el acceso directo del escritorio. Verificar que la aplicación se conecte a la base de datos MySQL (ya sea local o remota) y que permita ingresar un nuevo cliente con su tipo de seguro e ingresos anuales.
-- **Prueba de Validación:** Confirmar que si el equipo no cumple con los requisitos (sin MySQL), el instalador muestre el mensaje de error configurado en el `InitializeSetup` y cancele la instalación.
+---
+
+## 3. Pruebas de Validación
+
+Una vez generado el instalador, valídalo en un equipo limpio:
+
+- **Prueba de Integridad:** Ejecuta el `setup.exe` y verifica que los archivos se descompriman en `Program Files`.
+- **Prueba de Funcionalidad:** Abre el sistema desde el acceso directo y verifica la conexión a la base de datos MySQL.
+- **Prueba de Excepciones:** Simula un equipo sin MySQL instalado; el instalador debe mostrar la advertencia configurada en el script de validación.
 
 ## 4. Procedimiento de Marcha Atrás (Desinstalación)
-En caso de que la instalación no sea exitosa o se requiera revertir el sistema:
-1. Ejecutar el desinstalador que se creó automáticamente en la carpeta `C:\Program Files\Santiago Seguros Analytics\unins000.exe`.
-2. El desinstalador eliminará los archivos de la aplicación y los accesos directos.
-3. Si se seleccionó la opción durante la desinstalación, el script ejecutará la eliminación de la base de datos, dejando el equipo en el mismo estado en que se encontraba antes de la instalación.
+
+En caso de requerir revertir la instalación:
+
+1. Ejecuta el archivo `unins000.exe` ubicado en el directorio de la aplicación.
+2. Sigue el asistente para eliminar archivos y accesos directos.
+3. Cuando el sistema lo pregunte, aprueba la eliminación de la base de datos para dejar el equipo en su estado original.

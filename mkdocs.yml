@@ -6,5 +6,9 @@ theme:
     - navigation.sections
     - toc.integrate
     - content.code.copy
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
 nav:
   - Manual de Instalación: index.md
