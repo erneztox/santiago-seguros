@@ -1,17 +1,10 @@
-site_name: Documentación Santiago Seguros
+site_name: Manual de Instalación - Santiago Seguros
 theme:
   name: material
   language: es
   features:
-    - navigation.tabs
     - navigation.sections
     - toc.integrate
-    - search.suggest
-    - search.highlight
     - content.code.copy
 nav:
-  - Inicio: index.md
-  - "1. El Programa Ideal": programa-ideal.md
-  - "2. Requerimientos": requerimientos.md
-  - "3. Instructivo Detallado": instructivo.md
-  - Bibliografía: bibliografia.md
+  - Manual de Instalación: index.md
